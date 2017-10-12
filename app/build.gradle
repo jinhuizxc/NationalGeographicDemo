@@ -1,7 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
 android {
+//    支持databinding
+    dataBinding {
+        enabled true
+    }
+//    支持kapt
+    kapt {
+        generateStubs = true
+    }
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
     defaultConfig {
@@ -29,6 +40,26 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     compile "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    // databinding
+    kapt "com.android.databinding:compiler:2.3.0"
+    // lifecycle
+    compile "android.arch.lifecycle:runtime:1.0.0-alpha9"
+    compile "android.arch.lifecycle:extensions:1.0.0-alpha9"
+    annotationProcessor "android.arch.lifecycle:compiler:1.0.0-alpha9"
+    // design
+    compile 'com.android.support:design:26.+'
+    // recyclerview-v7
+    compile 'com.android.support:recyclerview-v7:26.+'
+    // okhttp3
+    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    // retrofit2
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+    // cardview
+    compile 'com.android.support:cardview-v7:26.+'
+    // glide
+    compile 'com.github.bumptech.glide:glide:3.8.0'
+    // PhotoView
+    compile 'com.github.chrisbanes:PhotoView:2.1.3'
 }
 repositories {
     mavenCentral()
