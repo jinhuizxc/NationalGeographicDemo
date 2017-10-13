@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.activity_splash.*
  * Created by wheat7 on 2017/9/13.
  *
  * 学习前辈的国家地理项目，用kotlin编写！
+ * 2017/10/13 在升级了android studio 后运行测试可以运行！
  */
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     override val layoutId: Int
