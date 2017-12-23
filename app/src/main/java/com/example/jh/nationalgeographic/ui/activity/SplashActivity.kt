@@ -23,21 +23,22 @@ import kotlinx.android.synthetic.main.activity_splash.*
  */
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     override val layoutId: Int
-
         get() = R.layout.activity_splash
+
     override fun initView(savedInstanceState: Bundle?) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1)
-        {
+        // api 大于22
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
             window.statusBarColor = Color.TRANSPARENT
         }
-        var anim = ObjectAnimator.ofFloat(fl_splash, "alpha", 1f, 0f)
+        val anim = ObjectAnimator.ofFloat(fl_splash, "alpha", 1f, 0f)
         anim.duration = 3000
         anim.interpolator = DecelerateInterpolator()
         anim.startDelay = 1000
         anim.start()
-        anim.addListener(object: Animator.AnimatorListener {
+        // kotlin 添加事件的监听——object：
+        anim.addListener(object : Animator.AnimatorListener {
             override fun onAnimationRepeat(p0: Animator?) {
             }
 

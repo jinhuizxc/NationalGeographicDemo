@@ -21,7 +21,7 @@ class DetailViewModel() : ViewModel() {
 
     fun getDetail(id : String) : MutableLiveData<Resource<Detail?>>? {
 
-        return mWebRepository?.getDetail(id)
+        return mWebRepository.getDetail(id)
     }
 
 }

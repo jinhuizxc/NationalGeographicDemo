@@ -19,7 +19,7 @@ class Resource<T>(){
     private constructor(status : Int, data: T?, message : String?) : this() {
         this.mData = data
         this.mStatus = status
-        this.mMessage = mMessage
+        this.mMessage = message
     }
 
     companion object {

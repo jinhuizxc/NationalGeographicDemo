@@ -46,6 +46,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
 
     var mCurrentPos: Int = 0
 
+    // 配置权限
     private val permissions = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE)
 
     private val REQUEST_PERMISSIONS = 1
@@ -76,6 +77,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
             getBinding().pos = firstPos + 1
             mCurrentPos = firstPos
         }
+        // view_pager的翻页
         view_pager.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -213,7 +215,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
                     })
                 } else {
                     try {
-                        var fileOutputStream: FileOutputStream = FileOutputStream(filePath)
+                        val fileOutputStream: FileOutputStream = FileOutputStream(filePath)
                         Log.d("NationalGeographic", resource.toString())
                         resource?.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
                         fileOutputStream.flush()

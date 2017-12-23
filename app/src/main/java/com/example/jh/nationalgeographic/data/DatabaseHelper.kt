@@ -15,13 +15,13 @@ class DatabaseHelper : SQLiteOpenHelper {
     constructor(context: Context?, name: String?, factory: SQLiteDatabase.CursorFactory?, version: Int, errorHandler: DatabaseErrorHandler?) : super(context, name, factory, version, errorHandler)
 
 
-    override fun onCreate(p0: SQLiteDatabase?) {
-        p0?.execSQL(CREATE_COLLECTS)
+    override fun onCreate(db: SQLiteDatabase?) {
+        db?.execSQL(CREATE_COLLECTS)
     }
 
-    override fun onUpgrade(p0: SQLiteDatabase?, p1: Int, p2: Int) {
-        p0?.execSQL("drop table if exists collects")
-        onCreate(p0)
+    override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
+        db?.execSQL("drop table if exists collects")
+        onCreate(db)
     }
 
     companion object {

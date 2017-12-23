@@ -33,7 +33,7 @@ object Collects : Serializable {
         val cursor: Cursor = db!!.query("Collects", null, null, null, null, null, null)
         if (cursor.moveToFirst()) {
             do {
-                var pic: Picture = Picture()
+                val pic: Picture = Picture()
                 pic.id = cursor.getString(cursor.getColumnIndex("id"))
                 pic.albumid = cursor.getString(cursor.getColumnIndex("albumid"))
                 pic.title = cursor.getString(cursor.getColumnIndex("title"))
@@ -105,10 +105,13 @@ object Collects : Serializable {
         return false
     }
 
+    // 得到收藏
     fun getCollect(context: Context): MutableList<Picture> {
         if (pictures == null) {
             return initCollects(context)
         }
+        //
+        // 在这里进行实例化: pictures as MutableList<Picture>等于pictures!!
         return pictures!!
     }
 

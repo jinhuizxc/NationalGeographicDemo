@@ -22,7 +22,7 @@ class WebRepository {
 
     fun getItem(index : Int) : MutableLiveData<Resource<Item?>>?{
 
-        var data : MutableLiveData<Resource<Item?>> = MutableLiveData<Resource<Item?>>()
+        val data : MutableLiveData<Resource<Item?>> = MutableLiveData<Resource<Item?>>()
         val retrofit = Retrofit.Builder()
                 .baseUrl("http://dili.bdatu.com/jiekou/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -42,7 +42,7 @@ class WebRepository {
     }
 
     fun getDetail(id : String) : MutableLiveData<Resource<Detail?>>? {
-        var data : MutableLiveData<Resource<Detail?>> = MutableLiveData<Resource<Detail?>>()
+        val data : MutableLiveData<Resource<Detail?>> = MutableLiveData<Resource<Detail?>>()
         val retrofit = Retrofit.Builder()
                 .baseUrl("http://dili.bdatu.com/jiekou/")
                 .addConverterFactory(GsonConverterFactory.create())

@@ -11,7 +11,7 @@ import android.view.View
  * Created by wheat7 on 2017/9/12.
  */
 
-abstract class BaseActivity<T : ViewDataBinding> : LifecycleActivity() {
+abstract class BaseActivity<out T : ViewDataBinding> : LifecycleActivity() {
 
     private var mainView: View? = null
     private var binding: ViewDataBinding? = null

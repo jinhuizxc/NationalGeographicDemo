@@ -31,6 +31,7 @@ class InfoActivity : BaseActivity<ActivityInfoBinding>() {
 
 
     override fun initView(savedInstanceState: Bundle?) {
+        // 获取缓存
         mInfoViewModel = ViewModelProviders.of(this).get(InfoViewModel::class.java)
         mInfoViewModel?.getImageCache(this)!!.observe(this, object : Observer<String?> {
             override fun onChanged(t: String?) {
@@ -38,25 +39,30 @@ class InfoActivity : BaseActivity<ActivityInfoBinding>() {
             }
         })
         initClick()
+        // 获取我的收藏
         Collects.getCollect(this)
     }
 
     private fun initClick() {
+        // 返回键
         info_back.setOnClickListener({
             onBackPressed()
         })
 
+        // 关于
         info_about.setOnClickListener({
             val intent: Intent = Intent(this@InfoActivity, AboutActivity::class.java)
             this@InfoActivity.startActivity(intent)
         })
 
+        // 检查更新
         info_checkupdate.setOnClickListener({
             val intent: Intent = Intent(this@InfoActivity, WebActivity::class.java)
             intent.putExtra("URL", "https://github.com/wheat7/NationalGeographic")
             this@InfoActivity.startActivity(intent)
         })
 
+        // 分享应用
         info_share.setOnClickListener {
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
@@ -66,18 +72,21 @@ class InfoActivity : BaseActivity<ActivityInfoBinding>() {
             startActivity(Intent.createChooser(intent, "分享国家地理"))
         }
 
+        // 清除缓存
         info_cache.setOnClickListener({
             GlideCacheUtil.getInstance().clearImageAllCache(this@InfoActivity)
             getBinding().cache = "0KB"
             Toast.makeText(this@InfoActivity, "清除成功", Toast.LENGTH_SHORT).show()
         })
 
+        // 提交反馈
         info_feedback.setOnClickListener {
             val intent: Intent = Intent(this@InfoActivity, WebActivity::class.java)
             intent.putExtra("URL", "https://github.com/wheat7/NationalGeographic/issues")
             this@InfoActivity.startActivity(intent)
         }
 
+        // 免责申明
         info_disclaimer.setOnClickListener({
             val dialogBuild: AlertDialog? = AlertDialog.Builder(this@InfoActivity)
                     .setTitle("免责申明")
@@ -86,6 +95,7 @@ class InfoActivity : BaseActivity<ActivityInfoBinding>() {
                     .show()
         })
 
+        // 收藏
         info_collect.setOnClickListener({
             if (!Collects.getDetail().counttotal.equals("0")) {
                 val intent: Intent = Intent(this@InfoActivity, CollectionActivity::class.java)
