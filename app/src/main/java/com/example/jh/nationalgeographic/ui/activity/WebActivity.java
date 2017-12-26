@@ -47,6 +47,7 @@ public class WebActivity extends BaseActivity<ActivityWebBinding> {
         getBinding().webView.getSettings().setUseWideViewPort(true);
         getBinding().webView.getSettings().setLoadWithOverviewMode(true);
         getBinding().webView.getSettings().setAppCacheEnabled(true);
+
         WebChromeClient chromeClient = new WebChromeClient() {
             // 复写2个方法
             @Override
@@ -63,6 +64,7 @@ public class WebActivity extends BaseActivity<ActivityWebBinding> {
 
         getBinding().webView.setWebChromeClient(chromeClient);
         getBinding().webView.setWebViewClient(new WebViewClient() {
+            // 复写3个方法
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 getBinding().tvClose.setVisibility(View.VISIBLE);
@@ -82,6 +84,7 @@ public class WebActivity extends BaseActivity<ActivityWebBinding> {
             }
         });
 
+        // 返回键
         getBinding().webBack.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {

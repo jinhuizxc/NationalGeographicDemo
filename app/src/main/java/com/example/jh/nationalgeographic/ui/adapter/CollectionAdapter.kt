@@ -52,18 +52,19 @@ class CollectionAdapter(context: Context) : RecyclerView.Adapter<CollectionAdapt
 
     override fun onBindViewHolder(holder: CollectionViewHolder?, position: Int) {
         Glide.with(mContext).load(mData?.picture!!.get(position).url).into(holder?.binding?.imgCollection)
+        // 界面跳转
         holder?.binding!!.itemCollection.setOnClickListener({ view ->
             if (mOnItemClickListener != null) {
                 mOnItemClickListener!!.onItemClick(this, position, view, holder, mData!!)
             }
         })
+        // 收藏的取消点击监听
         holder?.binding!!.collect.setOnClickListener({ view ->
             if (mOnCollectClickListener != null) {
                 mOnCollectClickListener!!.onCollectClick(this, position, holder!!.binding!!.collect, holder, mData!!)
             }
         })
     }
-
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): CollectionViewHolder {
         val binding = DataBindingUtil
@@ -72,7 +73,7 @@ class CollectionAdapter(context: Context) : RecyclerView.Adapter<CollectionAdapt
         return CollectionAdapter.CollectionViewHolder(binding)
     }
 
-
+    // 创建ViewHolderle类——CollectionViewHolder
     class CollectionViewHolder(binding: ItemCollectionBinding) : RecyclerView.ViewHolder(binding.root) {
         var binding: ItemCollectionBinding? = null
 
@@ -81,14 +82,15 @@ class CollectionAdapter(context: Context) : RecyclerView.Adapter<CollectionAdapt
         }
     }
 
+
+    // item的监听事件
+    interface OnItemClickListener {
+        fun onItemClick(adapter: CollectionAdapter, position: Int, view: View, collectionViewHolder: CollectionViewHolder, data: Detail)
+    }
     /**
      * Item click callback
      */
     private var mOnItemClickListener: OnItemClickListener? = null
-
-    interface OnItemClickListener {
-        fun onItemClick(adapter: CollectionAdapter, position: Int, view: View, collectionViewHolder: CollectionViewHolder, data: Detail)
-    }
 
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener) {
         mOnItemClickListener = onItemClickListener

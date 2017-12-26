@@ -16,6 +16,7 @@ import java.math.BigDecimal;
  */
 
 public class GlideCacheUtil {
+
     private static GlideCacheUtil inst;
 
     public static GlideCacheUtil getInstance() {
@@ -23,6 +24,61 @@ public class GlideCacheUtil {
             inst = new GlideCacheUtil();
         }
         return inst;
+    }
+
+
+    /**
+     * 清除图片所有缓存
+     */
+    public void clearImageAllCache(Context context) {
+        // 清除图片磁盘缓存
+        clearImageDiskCache(context);
+        // 清除图片内存缓存
+        clearImageMemoryCache(context);
+        // 删除指定目录下的文件，这里用于缓存的删除
+        String ImageExternalCatchDir = context.getExternalCacheDir() + ExternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
+        deleteFolderFile(ImageExternalCatchDir, true);
+    }
+
+    /**
+     * 删除指定目录下的文件，这里用于缓存的删除
+     *
+     * @param filePath       filePath
+     * @param deleteThisPath deleteThisPath
+     */
+    private void deleteFolderFile(String filePath, boolean deleteThisPath) {
+        if (!TextUtils.isEmpty(filePath)) {
+            try {
+                /**
+                 * String path="/mnt/sdcard/";  //我随便给的一个目录
+                 * File f=new File(path);   //new的一个File对象
+                 * if(f.isDirectory()){  //如果path表示的是一个目录则返回true
+                 * //这里要做什么逻辑判断那就是你自己的事了
+                 * ....
+                 * }
+                 * File[] files =f.listFiles()//获取当前文件夹下的所有文件和文件夹
+                 *
+                 */
+                File file = new File(filePath);
+                if (file.isDirectory()) {
+                    File files[] = file.listFiles();
+                    for (File file1 : files) {
+                        deleteFolderFile(file1.getAbsolutePath(), true);
+                    }
+                }
+                if (deleteThisPath) {
+                    if (!file.isDirectory()) {
+                        file.delete();
+                    } else {
+                        if (file.listFiles().length == 0) {
+                            file.delete();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -57,16 +113,6 @@ public class GlideCacheUtil {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * 清除图片所有缓存
-     */
-    public void clearImageAllCache(Context context) {
-        clearImageDiskCache(context);
-        clearImageMemoryCache(context);
-        String ImageExternalCatchDir = context.getExternalCacheDir() + ExternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR;
-        deleteFolderFile(ImageExternalCatchDir, true);
     }
 
     /**
@@ -109,36 +155,7 @@ public class GlideCacheUtil {
         return size;
     }
 
-    /**
-     * 删除指定目录下的文件，这里用于缓存的删除
-     *
-     * @param filePath       filePath
-     * @param deleteThisPath deleteThisPath
-     */
-    private void deleteFolderFile(String filePath, boolean deleteThisPath) {
-        if (!TextUtils.isEmpty(filePath)) {
-            try {
-                File file = new File(filePath);
-                if (file.isDirectory()) {
-                    File files[] = file.listFiles();
-                    for (File file1 : files) {
-                        deleteFolderFile(file1.getAbsolutePath(), true);
-                    }
-                }
-                if (deleteThisPath) {
-                    if (!file.isDirectory()) {
-                        file.delete();
-                    } else {
-                        if (file.listFiles().length == 0) {
-                            file.delete();
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
 
     /**
      * 格式化单位

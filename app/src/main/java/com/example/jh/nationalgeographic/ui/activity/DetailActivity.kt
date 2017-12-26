@@ -128,7 +128,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
         })
         // 初始化返回键的监听
         initClick()
-        // 回传  数据
+        // 回传数据
         setResult(Activity.RESULT_OK)
     }
 

@@ -5,11 +5,14 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Activity
 import android.app.ActivityOptions
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.view.animation.DecelerateInterpolator
+import android.widget.Button
+import android.widget.TextView
 import com.example.jh.nationalgeographic.databinding.ActivityCollectionBinding
 import com.example.jh.nationalgeographic.R
 import com.example.jh.nationalgeographic.data.Collects
@@ -44,6 +47,7 @@ class CollectionActivity : BaseActivity<ActivityCollectionBinding>(),
         recycler_collection.layoutManager = LinearLayoutManager(this)
         mAdapter.setOnCollectClickListener(this)
         mAdapter.setOnItemClickListener(this)
+        // 返回键
         back_collection.setOnClickListener({
             onBackPressed()
         })
@@ -53,15 +57,13 @@ class CollectionActivity : BaseActivity<ActivityCollectionBinding>(),
         val intent: Intent = Intent(this@CollectionActivity, DetailActivity::class.java)
         intent.putExtra("DETAIL", Collects.getDetail())
         intent.putExtra("POS", position)
+        // 带返回值跳转
         this@CollectionActivity.startActivityForResult(intent, REQUEST_INFO)
     }
 
     override fun onCollectClick(adapter: CollectionAdapter, position: Int, view: View, collectionViewHolder: CollectionAdapter.CollectionViewHolder, data: Detail) {
-        Collects.deleteItem(data.picture!!.get(position).id)
-        mAdapter.setData(Collects.getDetail())
-        if (mAdapter.itemCount == 0) {
-            this@CollectionActivity.finish()
-        }
+        // 是否需要取消收藏的判断
+        showDialog(data, position);
 
 //        从adapter中remove会出现错乱问题 直接重置data 下个版本解决
 //        mAdapter.removeItem(position)
@@ -101,8 +103,35 @@ class CollectionActivity : BaseActivity<ActivityCollectionBinding>(),
 //        })
     }
 
+    /**
+     * 是否需要取消收藏的判断
+     */
+    private fun showDialog(data: Detail, position: Int) {
+        val dialog = AlertDialog.Builder(this).create()
+        dialog.show()
+        if (dialog.window == null) return
+        dialog.window!!.setContentView(R.layout.back)//设置弹出框加载的布局(自定义dialog)
+        val cancel = dialog.findViewById<View>(R.id.btn_cancle) as Button
+        val sure = dialog.findViewById<View>(R.id.btn_sure) as Button
+
+        cancel.setOnClickListener { dialog.dismiss() }
+        sure.setOnClickListener {
+            Collects.deleteItem(data.picture!!.get(position).id)
+            mAdapter.setData(Collects.getDetail())
+            dialog.dismiss()
+            // 如果适配器为空则销毁界面
+            if (mAdapter.itemCount == 0) {
+                this@CollectionActivity.finish()
+            }
+        }
+
+    }
+
+    // 处理返回结果
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_INFO && resultCode == Activity.RESULT_OK) {
+            // 这里data是要回传的数据，通常思维是要用data，并没有用这个data，
+            // 之所以用带返回值跳转是——为了得到当前收藏的项
             mAdapter.setData(Collects.getDetail())
             if (mAdapter.itemCount == 0) {
                 this@CollectionActivity.finish()
