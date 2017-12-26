@@ -16,6 +16,8 @@ import java.io.Serializable
 /**
  * counttotal : 12
  * picture : [{"id":"14457","albumid":"1601","title":"〈寻找真正的维京人〉精选","content":"波兰的维京人重演者穿上盔甲，准备上演近身战斗。维京人的残暴并非浪得虚名：斯堪地那维亚男孩从小就接受作战训练，并且在社会制约下习于血腥暴力。 ","url":"http://pic01.bdatu.com/Upload/picimg/1496230162.jpg","size":"254945","addtime":"2017-05-31 19:29:25","author":"David Guttenfelder","thumb":"http://pic01.bdatu.com/Upload/picimg/1496230162.jpg","encoded":"1","weburl":"http://","type":"pic","yourshotlink":"","copyright":"","pmd5":"9f4c2c9dd41064b5bf5bd467bac8956e","sort":"14457"}]
+ *
+ *  object 引用类，不能用class!
  */
 object Collects : Serializable {
 
@@ -55,10 +57,12 @@ object Collects : Serializable {
         }
         cursor.close()
 //        counttotal = pictures?.size.toString()
+        // reverse  返回一个与指定list相反顺序的list
         pictures?.reverse()
         return pictures!!
     }
 
+    // 保存收藏item
     fun collectItem(pic: Picture) {
         pictures?.add(0 , pic)
         val values: ContentValues = ContentValues();
@@ -82,8 +86,10 @@ object Collects : Serializable {
 //        counttotal = pictures?.size.toString()
     }
 
+    // 删除收藏Item
     fun deleteItem(id: String?) {
         db!!.delete("Collects", "id=?", arrayOf(id))
+        // 如果去掉会怎样？测试去掉后收藏成功，取消收藏，再次收藏，不在执行收藏成功！
         var tempItem: Picture? = null
         for (pic: Picture in pictures!!) {
             if (pic.id.equals(id)) {
@@ -110,11 +116,11 @@ object Collects : Serializable {
         if (pictures == null) {
             return initCollects(context)
         }
-        //
         // 在这里进行实例化: pictures as MutableList<Picture>等于pictures!!
         return pictures!!
     }
 
+    // 得到Detail界面收藏的图片
     fun getDetail(): Detail {
         val detail: Detail = Detail()
         detail.counttotal = pictures?.size.toString()

@@ -75,6 +75,7 @@ public class GlideCacheUtil {
      * @return CacheSize
      */
     public String getCacheSize(Context context) {
+        // context.getCacheDir() =/data/user/0/com.example.jinhui.test_national/cache
         try {
             return getFormatSize(getFolderSize(new File(context.getCacheDir() + "/" + InternalCacheDiskCacheFactory.DEFAULT_DISK_CACHE_DIR)));
         } catch (Exception e) {
@@ -91,6 +92,7 @@ public class GlideCacheUtil {
      * @throws Exception
      */
     private long getFolderSize(File file) throws Exception {
+       // E/GlideCacheUtil: file =/data/user/0/com.example.jinhui.test_national/cache/image_manager_disk_cache
         long size = 0;
         try {
             File[] fileList = file.listFiles();

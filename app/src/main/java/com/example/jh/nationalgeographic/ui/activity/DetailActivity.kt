@@ -66,6 +66,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
         getBinding().pos = 1
         getBinding().titleAndContentVisible = true
         getBinding().isCollect = false
+        // 判断此照片是否被收藏
         if (Collects.isCollect(mPictures!!.get(0))) {
             getBinding().isCollect = true
         }
@@ -105,17 +106,17 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
                     animatorSet.play(scaleX).with(scaleY)
                     animatorSet.start()
                     animatorSet.addListener(object : Animator.AnimatorListener {
-                        override fun onAnimationRepeat(p0: Animator?) {
+                        override fun onAnimationRepeat(animation: Animator?) {
                         }
 
-                        override fun onAnimationEnd(p0: Animator?) {
+                        override fun onAnimationEnd(animation: Animator?) {
                             getBinding().titleAndContentVisible = false
                         }
 
-                        override fun onAnimationCancel(p0: Animator?) {
+                        override fun onAnimationCancel(animation: Animator?) {
                         }
 
-                        override fun onAnimationStart(p0: Animator?) {
+                        override fun onAnimationStart(animation: Animator?) {
                         }
                     })
                 } else {
@@ -125,7 +126,9 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
                 }
             }
         })
+        // 初始化返回键的监听
         initClick()
+        // 回传  数据
         setResult(Activity.RESULT_OK)
     }
 
@@ -133,7 +136,8 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
      * 请求权限
      */
     private fun checkPermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     permissions,
                     REQUEST_PERMISSIONS)
@@ -146,7 +150,9 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
         when (requestCode) {
             REQUEST_PERMISSIONS -> {
                 run {
-                    if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // grantResults.size > 0 转成kotlin grantResults.isNotEmpty()
+                    if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                        // 注意从这里这个方法就已经执行了！
                         savePhoto()
                     }
                 }
@@ -156,10 +162,11 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
     }
 
     private fun initClick() {
+        // 返回键
         detail_back.setOnClickListener({
             this@DetailActivity.finish()
         })
-
+        // 收藏
         detail_collect.setOnClickListener({
             if (Collects.isCollect(mPictures!!.get(mCurrentPos))) {
                 Collects.deleteItem(mPictures!!.get(mCurrentPos).id)
@@ -171,7 +178,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
                 Toast.makeText(this@DetailActivity, "收藏成功", Toast.LENGTH_SHORT).show()
             }
         })
-
+        // 分享
         detail_share.setOnClickListener({
             val intent = Intent(Intent.ACTION_SEND)
             intent.type = "text/plain"
@@ -181,6 +188,7 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
             startActivity(Intent.createChooser(intent, "分享"))
         })
 
+        // 保存按钮的监听
         detail_save.setOnClickListener({
             checkPermission()
         })
@@ -202,6 +210,15 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
             override fun onResourceReady(resource: Bitmap?, model: String?, target: Target<Bitmap?>?, isFromMemoryCache: Boolean, isFirstResource: Boolean): Boolean {
                 val fileDirPath: File = File(Environment.getExternalStorageDirectory().path + "/NationalGeographic/" + "/image/")
                 if (!fileDirPath.exists()) {
+                    /**
+                     *
+                     * mkdirs()可以建立多级文件夹， mkdir()只会建立一级的文件夹， 如下：
+                     * new File("/tmp/one/two/three").mkdirs();
+                     * 执行后， 会建立tmp/one/two/three四级目录
+                     * new File("/tmp/one/two/three").mkdir();
+                     * 则不会建立任何目录， 因为找不到/tmp/one/two目录， 结果返回false
+                     *
+                     */
                     fileDirPath.mkdirs()
                 }
                 val fileName = mPictures!!.get(mCurrentPos).id + ".jpeg"
@@ -214,9 +231,11 @@ class DetailActivity : BaseActivity<ActivityDetailBinding>() {
                         getBinding().saveProgressVisible = false
                     })
                 } else {
+                    // 保存图片的方法
                     try {
                         val fileOutputStream: FileOutputStream = FileOutputStream(filePath)
                         Log.d("NationalGeographic", resource.toString())
+                       // 压缩图片
                         resource?.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)
                         fileOutputStream.flush()
                         fileOutputStream.close()

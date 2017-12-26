@@ -16,8 +16,8 @@ class InfoViewModel : ViewModel() {
 
     var mImageCache : MutableLiveData<String> = MutableLiveData<String>()
 
+    // 得到图片缓存
     fun getImageCache(context: Context) : MutableLiveData<String> {
-
         mImageCache.value = GlideCacheUtil.getInstance().getCacheSize(context)
         return mImageCache
     }

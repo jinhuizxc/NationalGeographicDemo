@@ -19,21 +19,21 @@ import com.example.jh.nationalgeographic.data.model.Detail
 class DetailPagerAdapter() : PagerAdapter() {
 
     private var mData: Detail? = null
-    private var mOnPageClickListener: OnPageClickListener? = null
 
+    // 设置数据
     fun setData(data: Detail) {
         mData = data
         notifyDataSetChanged()
     }
 
-
+    // 复写父类PagerAdapter 的instantiateItem
     override fun instantiateItem(container: ViewGroup?, position: Int): Any {
         val photoView = PhotoView(container?.getContext())
         Glide.with(container?.getContext())
                 .load(mData?.picture!!.get(position)
                         .url).into(photoView)
 
-        var params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        val params: LinearLayout.LayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
         container?.addView(photoView, params)
         photoView.setOnClickListener(View.OnClickListener {
             if (mOnPageClickListener != null) {
@@ -43,6 +43,20 @@ class DetailPagerAdapter() : PagerAdapter() {
         return photoView
     }
 
+    /**
+     *  java.lang.UnsupportedOperationException:
+     *  Required method destroyItem was not overridden
+     *  需要有这个方法！，不然会报异常
+     */
+    override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
+//        super.destroyItem(container, position, `object`)
+        container!!.removeView(`object` as View)
+    }
+
+    // 重写PagerAdapter 的2个方法
+    override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
+        return view == `object`
+    }
     override fun getCount(): Int {
         if (mData != null) {
             return mData?.picture!!.size
@@ -50,17 +64,16 @@ class DetailPagerAdapter() : PagerAdapter() {
         return 0
     }
 
-    override fun destroyItem(container: ViewGroup?, position: Int, `object`: Any?) {
-        container!!.removeView(`object` as View)
-    }
 
-    override fun isViewFromObject(view: View?, `object`: Any?): Boolean {
-        return view == `object`
-    }
 
+
+
+    // 图片点击事件的处理
     public interface OnPageClickListener {
         fun onClick()
     }
+
+    private var mOnPageClickListener: OnPageClickListener? = null
 
     public fun setonPageClickListener(listener: OnPageClickListener) {
         mOnPageClickListener = listener

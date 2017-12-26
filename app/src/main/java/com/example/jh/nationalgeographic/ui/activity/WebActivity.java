@@ -1,5 +1,6 @@
 package com.example.jh.nationalgeographic.ui.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class WebActivity extends BaseActivity<ActivityWebBinding> {
         }
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     public void initView(Bundle savedInstanceState) {
         Intent intent = getIntent();
@@ -46,6 +48,7 @@ public class WebActivity extends BaseActivity<ActivityWebBinding> {
         getBinding().webView.getSettings().setLoadWithOverviewMode(true);
         getBinding().webView.getSettings().setAppCacheEnabled(true);
         WebChromeClient chromeClient = new WebChromeClient() {
+            // 复写2个方法
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
@@ -79,7 +82,7 @@ public class WebActivity extends BaseActivity<ActivityWebBinding> {
             }
         });
 
-        getBinding().webBack.setOnClickListener(new View.OnClickListener() {
+        getBinding().webBack.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 onBackPressed();
